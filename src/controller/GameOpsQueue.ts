@@ -1,5 +1,6 @@
 import { Movable } from "../model/Movable";
-import { Action, GameOp } from "./GameOp";
+import { LinkedList } from "../model/prime/LinkedList";
+import { GameOpAction, GameOp } from "./GameOp";
 
 export class GameOpsQueue {
 	private list: LinkedList<GameOp>;
@@ -8,11 +9,15 @@ export class GameOpsQueue {
 		this.list = new LinkedList();
 	}
 
-	public enqueue(movable: Movable, action: Action) {
+	public enqueue(movable: Movable, action: GameOpAction): void {
 		this.list.enqueue(new GameOp(movable, action));
 	}
 
 	public dequeue(): GameOp | null {
 		return this.list.dequeue();
+	}
+
+	public isEmpty(): boolean {
+		return this.list.length === 0;
 	}
 }

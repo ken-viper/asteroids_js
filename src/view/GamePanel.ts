@@ -1,6 +1,9 @@
+import { CommandCenter } from "../controller/CommandCenter";
 import { Game } from "../controller/Game";
 import { Movable } from "../model/Movable";
+import { Dimension } from "../model/prime/Dimension";
 import { Point } from "../model/prime/Point";
+import { getEnumName, Universe } from "../model/prime/Universe";
 import { GameFrame } from "./GameFrame";
 
 export class GamePanel {
@@ -18,7 +21,7 @@ export class GamePanel {
 	private context: CanvasRenderingContext2D;
 	private offscreenContext: CanvasRenderingContext2D;
 
-	constructor(dimensions: { width: number; height: number }) {
+	constructor(dimensions: Dimension) {
 		this.gameFrame = new GameFrame(dimensions);
 
 		this.canvas = this.gameFrame.getCanvas();
@@ -66,21 +69,65 @@ export class GamePanel {
 		this.pntShipsRemaining.push(new Point(0, 9));
 	}
 
-	private drawFalconStatus(g: CanvasRenderingContext2D): void {}
-	private drawNumFrame(g: CanvasRenderingContext2D): void {}
+	private drawFalconStatus(g: CanvasRenderingContext2D): void {
+		g.fillStyle = "white";
+		g.font = this.fontNormal;
+		const OFFSET_LEFT: number = 220;
+
+		// Draw the level upper-right corner
+		const universeName: string = getEnumName(Universe, CommandCenter.getInstance().getUniverse()!)!;
+		let levelText: string = `Level: [${CommandCenter.getInstance().getLevel()}] `;
+		levelText += `${universeName.replace("_", " ")}`;
+		g.fillText(levelText, Game.DIM.getWidth() - OFFSET_LEFT, this.fontHeight);
+		g.fillText(
+			`Score: ${CommandCenter.getInstance().getScore()}`,
+			Game.DIM.getWidth() - OFFSET_LEFT,
+			this.fontHeight * 2
+		);
+
+		// Status array
+		let statusArray: string[] = [];
+		// TODO: Check for conditionals and push to statusArray
+		if (statusArray.length > 0) {
+			this.displayTextOnScreen(g, ...statusArray);
+		}
+	}
+
+	private drawNumFrame(g: CanvasRenderingContext2D): void {
+		g.fillStyle = "white";
+		g.font = this.fontNormal;
+		g.fillText(
+			`FRAME[TYPESCRIPT]: ${CommandCenter.getInstance().getFrame()}`,
+			12,
+			Game.DIM.getHeight() - (this.fontHeight + 22)
+		);
+	}
+
 	private drawMeters(g: CanvasRenderingContext2D): void {}
-	private drawOneMeter(g: CanvasRenderingContext2D, color: string, offset: number, percent: number): void {}
+
+	private drawOneMeter(g: CanvasRenderingContext2D, color: string, offset: number, percent: number): void {
+		const xVal: number = Game.DIM.getWidth() - (100 + 120 * offset);
+		const yVal: number = Game.DIM.getHeight() - 45;
+
+		// Draw meter
+		g.fillStyle = color;
+		g.fillRect(xVal, yVal, percent, 10);
+
+		// Draw gray box
+		g.fillStyle = "gray";
+		g.fillRect(xVal, yVal, 100, 10);
+	}
 
 	public update(): void {
 		// Canvas is already created in the constructor
 		// We need to first clear the offscreen canvas
 		this.offscreenContext.fillStyle = "black";
-		this.offscreenContext.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
+		this.offscreenContext.fillRect(0, 0, Game.DIM.getWidth(), Game.DIM.getHeight());
 
-		// Developed purposes only (might be removed later on)
+		// Development purposes only (might be removed later on)
 		this.drawNumFrame(this.offscreenContext);
 
-		if (true) {
+		if (CommandCenter.getInstance().isGameOver()) {
 			this.displayTextOnScreen(
 				this.offscreenContext,
 				"GAME OVER",
@@ -92,15 +139,15 @@ export class GamePanel {
 				"'M' to toggle music",
 				"'A' to toggle radar"
 			);
-		} else if (false) {
+		} else if (CommandCenter.getInstance().isPaused()) {
 			this.displayTextOnScreen(this.offscreenContext, "GAME PAUSED", "press 'P' to continue");
 		} else {
 			this.moveDrawMovables(
-				this.offscreenContext
-				// debris,
-				// floaters,
-				// foes,
-				// friends
+				this.offscreenContext,
+				CommandCenter.getInstance().getMovDebris().toArray(),
+				CommandCenter.getInstance().getMovFloaters().toArray(),
+				CommandCenter.getInstance().getMovFoes().toArray(),
+				CommandCenter.getInstance().getMovFriends().toArray()
 			);
 			this.drawNumberShipsRemaining(this.offscreenContext);
 			this.drawMeters(this.offscreenContext);
@@ -120,7 +167,13 @@ export class GamePanel {
 		});
 	}
 
-	private drawNumberShipsRemaining(g: CanvasRenderingContext2D): void {}
+	private drawNumberShipsRemaining(g: CanvasRenderingContext2D): void {
+		let numFalcons: number = CommandCenter.getInstance().getNumFalcons();
+		while (numFalcons > 1) {
+			this.drawOneShip(g, numFalcons--);
+		}
+	}
+
 	private drawOneShip(g: CanvasRenderingContext2D, offset: number): void {}
 
 	private displayTextOnScreen(g: CanvasRenderingContext2D, ...lines: string[]): void {

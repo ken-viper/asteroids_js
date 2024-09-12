@@ -1,13 +1,10 @@
-interface GameFrameDimensions {
-	width: number;
-	height: number;
-}
+import { Dimension } from "../model/prime/Dimension";
 
 export class GameFrame {
 	private canvas: HTMLCanvasElement | undefined;
 	private context: CanvasRenderingContext2D | undefined;
 
-	constructor(dimensions: GameFrameDimensions) {
+	constructor(dimensions: Dimension) {
 		try {
 			this.initialize(dimensions);
 		} catch (error) {
@@ -15,10 +12,10 @@ export class GameFrame {
 		}
 	}
 
-	private initialize(dimensions: GameFrameDimensions): void {
+	private initialize(dimensions: Dimension): void {
 		this.canvas = document.createElement("canvas");
-		this.canvas.width = dimensions.width;
-		this.canvas.height = dimensions.height;
+		this.canvas.width = dimensions.getWidth();
+		this.canvas.height = dimensions.getHeight();
 		document.body.appendChild(this.canvas);
 
 		this.context = this.canvas.getContext("2d")!;

@@ -50,12 +50,36 @@ export class LinkedList<T> {
 		}
 	}
 
+	public clear(): void {
+		this.head = null;
+		this.tail = null;
+		this.length = 0;
+	}
+
 	public print(): void {
 		let current = this.head;
 		while (current) {
 			console.log(`${current.data} -> `);
 			current = current.next;
 		}
+	}
+
+	public forEach(callback: (data: T) => void): void {
+		let current = this.head;
+		while (current) {
+			callback(current.data);
+			current = current.next;
+		}
+	}
+
+	public toArray(): T[] {
+		const arr: T[] = [];
+		let current = this.head;
+		while (current) {
+			arr.push(current.data);
+			current = current.next;
+		}
+		return arr;
 	}
 
 	public enqueue(data: T): void {

@@ -1,15 +1,15 @@
 import { Movable } from "../model/Movable";
 
-export enum Action {
+export enum GameOpAction {
 	ADD,
 	REMOVE,
 }
 
 export class GameOp {
 	private movable: Movable;
-	private action: Action;
+	private action: GameOpAction;
 
-	constructor(movable: Movable, action: Action) {
+	constructor(movable: Movable, action: GameOpAction) {
 		this.movable = movable;
 		this.action = action;
 	}
@@ -18,7 +18,7 @@ export class GameOp {
 		return this.movable;
 	}
 
-	public getAction(): Action {
+	public getAction(): GameOpAction {
 		return this.action;
 	}
 
@@ -26,7 +26,7 @@ export class GameOp {
 		this.movable = movable;
 	}
 
-	public setAction(action: Action): void {
+	public setAction(action: GameOpAction): void {
 		this.action = action;
 	}
 }
