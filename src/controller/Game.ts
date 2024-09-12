@@ -1,7 +1,7 @@
 import { GamePanel } from "../view/GamePanel";
 
 export class Game {
-	public static readonly DIM = { width: 1500, height: 950 };
+	public static readonly DIM = { width: 1400, height: 680 };
 
 	private readonly gamePanel: GamePanel;
 	public static readonly ANIMATION_DELAY = 40;

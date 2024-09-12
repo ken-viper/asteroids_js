@@ -26,4 +26,18 @@ export class GameFrame {
 			throw new Error("Failed to get 2D rendering context");
 		}
 	}
+
+	public getCanvas(): HTMLCanvasElement {
+		if (!this.canvas) {
+			throw new Error("Canvas not initialized");
+		}
+		return this.canvas;
+	}
+
+	public getContext(): CanvasRenderingContext2D {
+		if (!this.context) {
+			throw new Error("Context not initialized");
+		}
+		return this.context;
+	}
 }

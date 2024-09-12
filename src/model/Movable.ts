@@ -1,4 +1,5 @@
 import { Point } from "./prime/Point";
+import { LinkedList } from "./prime/LinkedList";
 
 export enum Team {
 	FRIEND,
@@ -9,7 +10,7 @@ export enum Team {
 
 export interface Movable {
 	move(): void;
-	draw(): void;
+	draw(g: CanvasRenderingContext2D): void;
 
 	getCenter(): Point;
 	getRadius(): number;

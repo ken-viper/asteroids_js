@@ -7,7 +7,7 @@ class ListNode<T> {
 	}
 }
 
-class LinkedList<T> {
+export class LinkedList<T> {
 	public head: ListNode<T> | null = null;
 	public tail: ListNode<T> | null = null;
 	public length = 0;
