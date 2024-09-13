@@ -14,6 +14,9 @@ export class GameOpsQueue {
 	}
 
 	public dequeue(): GameOp | null {
+		if (this.isEmpty()) {
+			throw new Error("Cannot dequeue from an empty queue");
+		}
 		return this.list.dequeue();
 	}
 

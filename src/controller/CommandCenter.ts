@@ -1,3 +1,4 @@
+import { Falcon } from "../model/Falcon";
 import { Movable } from "../model/Movable";
 import { Dimension } from "../model/prime/Dimension";
 import { LinkedList } from "../model/prime/LinkedList";
@@ -15,8 +16,9 @@ export class CommandCenter {
 	private radar: boolean = false;
 	private frame: number = 0;
 
-	private readonly falcon: any;
+	private readonly falcon: Falcon = new Falcon();
 	private readonly miniDimHash: Map<Universe, Dimension> = new Map<Universe, Dimension>();
+	// TODO: Add concrete implementation
 	private readonly miniMap: any;
 
 	private readonly movDebris: LinkedList<Movable> = new LinkedList<Movable>();
@@ -48,10 +50,11 @@ export class CommandCenter {
 		this.setScore(0);
 		this.setPaused(false);
 		this.setNumFalcons(4);
-		// TODO: Spawn a new falcon
+		this.falcon.decrementFalconNumAndSpawn();
 
 		this.opsQueue.enqueue(this.falcon, GameOpAction.ADD);
-		this.opsQueue.enqueue(this.miniMap, GameOpAction.ADD);
+		// TODO: Uncomment this after implementing the radar
+		// this.opsQueue.enqueue(this.miniMap, GameOpAction.ADD);
 	}
 
 	private setDimHash(): void {
@@ -86,7 +89,7 @@ export class CommandCenter {
 	}
 
 	public getUniDim(): Dimension {
-		if (!this.universe) {
+		if (this.universe === undefined) {
 			throw new Error("Universe is not set");
 		}
 		return this.miniDimHash.get(this.universe)!;

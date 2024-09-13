@@ -1,3 +1,4 @@
+import { Falcon, FalconTurnState } from "../model/Falcon";
 import { Movable, Team } from "../model/Movable";
 import { Dimension } from "../model/prime/Dimension";
 import { LinkedList } from "../model/prime/LinkedList";
@@ -116,36 +117,35 @@ export class Game {
 
 	private processGameOpsQueue(): void {
 		while (!CommandCenter.getInstance().getOpsQueue().isEmpty()) {
-			const gameOp: GameOp | null = CommandCenter.getInstance().getOpsQueue().dequeue();
+			const gameOp: GameOp = CommandCenter.getInstance().getOpsQueue().dequeue()!;
 
-			// TODO: Uncomment code when concrete classes of Movable are implemented
-			// if (gameOp) {
-			// 	let list: LinkedList<Movable>;
-			// 	const mov: Movable = gameOp.getMovable();
+			if (gameOp) {
+				let list: LinkedList<Movable>;
+				const mov: Movable = gameOp.getMovable();
 
-			// 	switch (mov.getTeam()) {
-			// 		case Team.FOE:
-			// 			list = CommandCenter.getInstance().getMovFoes();
-			// 			break;
-			// 		case Team.FRIEND:
-			// 			list = CommandCenter.getInstance().getMovFriends();
-			// 			break;
-			// 		case Team.FLOATER:
-			// 			list = CommandCenter.getInstance().getMovFloaters();
-			// 			break;
-			// 		case Team.DEBRIS:
-			// 		default:
-			// 			list = CommandCenter.getInstance().getMovDebris();
-			// 			break;
-			// 	}
+				switch (mov.getTeam()) {
+					case Team.FOE:
+						list = CommandCenter.getInstance().getMovFoes();
+						break;
+					case Team.FRIEND:
+						list = CommandCenter.getInstance().getMovFriends();
+						break;
+					case Team.FLOATER:
+						list = CommandCenter.getInstance().getMovFloaters();
+						break;
+					case Team.DEBRIS:
+					default:
+						list = CommandCenter.getInstance().getMovDebris();
+						break;
+				}
 
-			// 	const action: GameOpAction = gameOp.getAction();
-			// 	if (action === GameOpAction.ADD) {
-			// 		mov.addToGame(list);
-			// 	} else {
-			// 		mov.removeFromGame(list);
-			// 	}
-			// }
+				const action: GameOpAction = gameOp.getAction();
+				if (action === GameOpAction.ADD) {
+					mov.addToGame(list);
+				} else {
+					mov.removeFromGame(list);
+				}
+			}
 		}
 	}
 
@@ -154,7 +154,7 @@ export class Game {
 	spawnBigAsteroids(num: number) {}
 
 	private isLevelClear(): boolean {
-		let asteroidFree: boolean = true;
+		let asteroidFree: boolean = false;
 		CommandCenter.getInstance()
 			.getMovFoes()
 			.forEach((movFoe: Movable) => {
@@ -172,11 +172,10 @@ export class Game {
 		let level: number = CommandCenter.getInstance().getLevel();
 		CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10000 * level);
 
-		// TODO: Uncomment code after Falcon is implemented
 		// Center the falcon
-		// CommandCenter.getInstance()
-		// 	.getFalcon()
-		// 	.setCenter(new Point(Game.DIM.getWidth() / 2, Game.DIM.getHeight() / 2));
+		CommandCenter.getInstance()
+			.getFalcon()
+			.setCenter(new Point(Game.DIM.getWidth() / 2, Game.DIM.getHeight() / 2));
 
 		// Cycle through universes
 		const universeValues: number[] = getEnumValues(Universe);
@@ -191,26 +190,31 @@ export class Game {
 		CommandCenter.getInstance().setLevel(level);
 		this.spawnBigAsteroids(level);
 
-		// TODO: Modify params when Falcon is implemented (Falcon.INITIAL_SPAWN_TIME)
 		// Make the falcon invincible in case new asteroids spawn on top of it
-		// CommandCenter.getInstance().getFalcon().setShield(0);
+		CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
 		// Show level and universe in the center of the screen
-		// CommandCenter.getInstance().getFalcon().setShowLevel(0);
+		CommandCenter.getInstance().getFalcon().setShowLevel(Falcon.INITIAL_SPAWN_TIME);
 	}
 
 	keyPressed(event: KeyboardEvent): void {
-		// TODO: Change to concrete type when implemented
-		const falcon: any = CommandCenter.getInstance().getFalcon();
+		const falcon: Falcon = CommandCenter.getInstance().getFalcon();
+
 		switch (event.keyCode) {
 			case Game.KEYS.FIRE:
 				break;
 			case Game.KEYS.NUKE:
 				break;
 			case Game.KEYS.UP:
+				falcon.setThrusting(true);
+				// TODO: Play sound effect ("whitenoise-loop.wav")
 				break;
 			case Game.KEYS.LEFT:
+				console.log("LEFT");
+				falcon.setTurnState(FalconTurnState.LEFT);
 				break;
 			case Game.KEYS.RIGHT:
+				console.log("RIGHT");
+				falcon.setTurnState(FalconTurnState.RIGHT);
 				break;
 			default:
 				break;
@@ -218,6 +222,8 @@ export class Game {
 	}
 
 	keyReleased(event: KeyboardEvent): void {
+		const falcon: Falcon = CommandCenter.getInstance().getFalcon();
+
 		if (event.keyCode === Game.KEYS.START && CommandCenter.getInstance().isGameOver()) {
 			CommandCenter.getInstance().initGame();
 			return;
@@ -225,15 +231,18 @@ export class Game {
 
 		switch (event.keyCode) {
 			case Game.KEYS.LEFT | Game.KEYS.RIGHT:
+				falcon.setTurnState(FalconTurnState.IDLE);
 				break;
 			case Game.KEYS.UP:
+				falcon.setThrusting(false);
+				// TODO: Stop sound effect ("whitenoise-loop.wav")
 				break;
 			case Game.KEYS.PAUSE:
 				CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
 				break;
 			case Game.KEYS.QUIT:
 				// TODO: Implement a proper quitting method
-				// At the moment, game pauses (we cannot close the browser screen)
+				// At the moment, game pauses (we cannot close the browser)
 				CommandCenter.getInstance().setPaused(true);
 				break;
 			case Game.KEYS.RADAR:

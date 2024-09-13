@@ -87,7 +87,9 @@ export class GamePanel {
 
 		// Status array
 		let statusArray: string[] = [];
-		// TODO: Check for conditionals and push to statusArray
+		if (CommandCenter.getInstance().getFalcon().getShowLevel() > 0) statusArray.push(levelText);
+		if (CommandCenter.getInstance().getFalcon().isMaxSpeedAttained()) statusArray.push("WARNING - SLOW DOWN");
+		if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0) statusArray.push("PRESS F for NUKE");
 		if (statusArray.length > 0) {
 			this.displayTextOnScreen(g, ...statusArray);
 		}
