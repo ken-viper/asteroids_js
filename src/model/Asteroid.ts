@@ -1,5 +1,6 @@
 import { CommandCenter } from "../controller/CommandCenter";
 import { GameOpAction } from "../controller/GameOp";
+import { SoundLoader } from "../controller/SoundLoader";
 import { Movable, Team } from "./Movable";
 import { LinkedList } from "./prime/LinkedList";
 import { Point } from "./prime/Point";
@@ -85,7 +86,6 @@ export class Asteroid extends Sprite {
 			.map(() => polarPointSupplier())
 			.sort((pp1, pp2) => pp1.compareTheta(pp2))
 			.map(polarToCartesian);
-		console.log(points);
 		return points;
 	}
 
@@ -99,9 +99,9 @@ export class Asteroid extends Sprite {
 		CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10 * (this.getSize() + 1));
 
 		if (this.getSize() > 1) {
-			// TODO: Play sound for small asteroids ("pillow.wav")
+			SoundLoader.playSound("pillow.wav");
 		} else {
-			// TODO: Play sound for medium and large asteroids ("kapow.wav")
+			SoundLoader.playSound("kapow.wav");
 		}
 	}
 

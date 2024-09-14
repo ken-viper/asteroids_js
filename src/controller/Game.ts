@@ -12,6 +12,7 @@ import { Asteroid } from "../model/Asteroid";
 import { ShieldFloater } from "../model/ShieldFloater";
 import { NukeFloater } from "../model/NukeFloater";
 import { Nuke } from "../model/Nuke";
+import { SoundLoader } from "./SoundLoader";
 
 export class Game {
 	public static readonly DIM: Dimension = new Dimension(1400, 680);
@@ -234,7 +235,7 @@ export class Game {
 				break;
 			case Game.KEYS.UP:
 				falcon.setThrusting(true);
-				// TODO: Play sound effect ("whitenoise-loop.wav")
+				SoundLoader.playSound("whitenoise_loop.wav");
 				break;
 			case Game.KEYS.LEFT:
 				falcon.setTurnState(FalconTurnState.LEFT);
@@ -262,7 +263,7 @@ export class Game {
 				break;
 			case Game.KEYS.UP:
 				falcon.setThrusting(false);
-				// TODO: Stop sound effect ("whitenoise-loop.wav")
+				SoundLoader.stopSound("whitenoise_loop.wav");
 				break;
 			case Game.KEYS.PAUSE:
 				CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
@@ -275,7 +276,11 @@ export class Game {
 				CommandCenter.getInstance().setRadar(!CommandCenter.getInstance().isRadar());
 				break;
 			case Game.KEYS.MUTE:
-				// TODO: Add music
+				if (CommandCenter.getInstance().isThemeMusic()) {
+					SoundLoader.stopSound("dr_loop.wav");
+				} else {
+					SoundLoader.playSound("dr_loop.wav");
+				}
 				CommandCenter.getInstance().setThemeMusic(!CommandCenter.getInstance().isThemeMusic());
 				break;
 			default:

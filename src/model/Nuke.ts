@@ -4,6 +4,7 @@ import { Point } from "./prime/Point";
 import { Movable, Team } from "./Movable";
 import { LinkedList } from "./prime/LinkedList";
 import { CommandCenter } from "../controller/CommandCenter";
+import { SoundLoader } from "../controller/SoundLoader";
 
 export class Nuke extends Sprite {
 	private static readonly EXPIRE: number = 60;
@@ -61,7 +62,7 @@ export class Nuke extends Sprite {
 	public addToGame(list: LinkedList<Movable>): void {
 		if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0) {
 			list.add(this);
-			// TODO: Play sound "nuke.wav"
+			SoundLoader.playSound("nuke.wav");
 			CommandCenter.getInstance().getFalcon().setNukeMeter(0);
 		}
 	}

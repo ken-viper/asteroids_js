@@ -1,5 +1,5 @@
 import { CommandCenter } from "../controller/CommandCenter";
-import { Game } from "../controller/Game";
+import { SoundLoader } from "../controller/SoundLoader";
 import { Falcon } from "./Falcon";
 import { Floater } from "./Floater";
 import { Movable } from "./Movable";
@@ -22,7 +22,7 @@ export class NukeFloater extends Floater {
 		super.removeFromGame(list);
 
 		if (this.getExpiry() > 0) {
-			// TODO: Play sound "nuke-up.wav"
+			SoundLoader.playSound("nuke-up.wav");
 			CommandCenter.getInstance().getFalcon().setNukeMeter(Falcon.MAX_NUKE);
 		}
 	}

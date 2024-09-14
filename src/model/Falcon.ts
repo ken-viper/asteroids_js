@@ -1,5 +1,6 @@
 import { CommandCenter } from "../controller/CommandCenter";
 import { ImageLoader } from "../controller/ImageLoader";
+import { SoundLoader } from "../controller/SoundLoader";
 import { Movable, Team } from "./Movable";
 import { LinkedList } from "./prime/LinkedList";
 import { Sprite } from "./Sprite";
@@ -141,7 +142,8 @@ export class Falcon extends Sprite {
 	public decrementFalconNumAndSpawn(): void {
 		CommandCenter.getInstance().setNumFalcons(CommandCenter.getInstance().getNumFalcons() - 1);
 		if (CommandCenter.getInstance().isGameOver()) return;
-		// TODO: Add sound effects (shipspawn.wav)
+
+		SoundLoader.playSound("shipspawn.wav");
 		this.shield = Falcon.INITIAL_SPAWN_TIME;
 		this.invisible = Falcon.INITIAL_SPAWN_TIME / 5;
 		this.setOrientation(Math.floor(Math.random() * (360 / Falcon.TURN_STEP)) * Falcon.TURN_STEP);

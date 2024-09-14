@@ -1,3 +1,4 @@
+import { SoundLoader } from "../controller/SoundLoader";
 import { Falcon } from "./Falcon";
 import { Movable, Team } from "./Movable";
 import { LinkedList } from "./prime/LinkedList";
@@ -39,6 +40,6 @@ export class Bullet extends Sprite {
 
 	public addToGame(list: LinkedList<Movable>): void {
 		super.addToGame(list);
-		// TODO: Play sound when bullet is fired ("thump.wav")
+		SoundLoader.playSound("thump.wav");
 	}
 }

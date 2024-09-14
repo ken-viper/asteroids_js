@@ -24,6 +24,13 @@ module.exports = {
           filename: 'assets/[name][hash][ext][query]'
         }
       },
+      {
+        test: /\.(wav|mp3|ogg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][hash][ext][query]'
+        }
+      }
     ],
   },
   devServer: {
