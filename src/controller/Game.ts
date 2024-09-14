@@ -1,4 +1,3 @@
-import { Falcon, FalconTurnState } from "../model/Falcon";
 import { Movable, Team } from "../model/Movable";
 import { Dimension } from "../model/prime/Dimension";
 import { LinkedList } from "../model/prime/LinkedList";
@@ -7,6 +6,8 @@ import { getEnumValues, Universe } from "../model/prime/Universe";
 import { GamePanel } from "../view/GamePanel";
 import { CommandCenter } from "./CommandCenter";
 import { GameOp, GameOpAction } from "./GameOp";
+import { Bullet } from "../model/Bullet";
+import { Falcon, FalconTurnState } from "../model/Falcon";
 
 export class Game {
 	public static readonly DIM: Dimension = new Dimension(1400, 680);
@@ -201,6 +202,7 @@ export class Game {
 
 		switch (event.keyCode) {
 			case Game.KEYS.FIRE:
+				CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOpAction.ADD);
 				break;
 			case Game.KEYS.NUKE:
 				break;
@@ -209,11 +211,9 @@ export class Game {
 				// TODO: Play sound effect ("whitenoise-loop.wav")
 				break;
 			case Game.KEYS.LEFT:
-				console.log("LEFT");
 				falcon.setTurnState(FalconTurnState.LEFT);
 				break;
 			case Game.KEYS.RIGHT:
-				console.log("RIGHT");
 				falcon.setTurnState(FalconTurnState.RIGHT);
 				break;
 			default:
