@@ -99,27 +99,32 @@ export abstract class Sprite implements Movable {
 		g.restore();
 	}
 
+	// TODO: Fix the rendering issue of polygons
 	protected renderVector(g: CanvasRenderingContext2D): void {
 		if (this.color) {
 			g.strokeStyle = this.color;
 		}
 
 		const polars = Utils.cartesiansToPolars(this.cartesians);
+
 		const rotatePolarByOrientation = (pp: PolarPoint): PolarPoint =>
-			new PolarPoint(pp.getR(), pp.getTheta() + (this.orientation * Math.PI) / 180);
+			new PolarPoint(pp.getR(), pp.getTheta() + (Math.PI / 180) * this.orientation);
+
 		const polarToCartesian = (pp: PolarPoint): Point =>
 			new Point(
-				Math.round(pp.getR() * this.radius * Math.sin(pp.getTheta())),
-				Math.round(pp.getR() * this.radius * Math.cos(pp.getTheta()))
+				pp.getR() * this.radius * Math.sin(pp.getTheta()),
+				pp.getR() * this.radius * Math.cos(pp.getTheta())
 			);
+
 		const adjustForLocation = (p: Point): Point =>
-			new Point(this.center.getX() + p.getX(), this.center.getY() - p.getY());
+			new Point(this.getCenter().getX() + p.getX(), this.getCenter().getY() - p.getY());
 
 		const xPoints = polars
 			.map(rotatePolarByOrientation)
 			.map(polarToCartesian)
 			.map(adjustForLocation)
 			.map((p) => p.getX());
+
 		const yPoints = polars
 			.map(rotatePolarByOrientation)
 			.map(polarToCartesian)
@@ -131,6 +136,7 @@ export abstract class Sprite implements Movable {
 		for (let i = 0; i < xPoints.length; i++) {
 			g.lineTo(xPoints[i], yPoints[i]);
 		}
+		g.lineTo(xPoints[0], yPoints[0]);
 		g.closePath();
 		g.stroke();
 	}

@@ -8,6 +8,7 @@ import { CommandCenter } from "./CommandCenter";
 import { GameOp, GameOpAction } from "./GameOp";
 import { Bullet } from "../model/Bullet";
 import { Falcon, FalconTurnState } from "../model/Falcon";
+import { Asteroid } from "../model/Asteroid";
 
 export class Game {
 	public static readonly DIM: Dimension = new Dimension(1400, 680);
@@ -76,44 +77,45 @@ export class Game {
 	}
 
 	private checkCollisions(): void {
-		// TODO: Uncomment code when concrete classes of Movable are implemented
-		// let pntFriendCenter: Point;
-		// let pntFoeCenter: Point;
-		// let radFriend: number;
-		// let radFoe: number;
-		// // Check for collisions between friends and foes
-		// CommandCenter.getInstance()
-		// 	.getMovFriends()
-		// 	.forEach((movFriend: Movable) => {
-		// 		CommandCenter.getInstance()
-		// 			.getMovFoes()
-		// 			.forEach((movFoe: Movable) => {
-		// 				pntFriendCenter = movFriend.getCenter();
-		// 				pntFoeCenter = movFoe.getCenter();
-		// 				radFriend = movFriend.getRadius();
-		// 				radFoe = movFoe.getRadius();
-		// 				// Detect collision
-		// 				if (pntFriendCenter.distanceTo(pntFoeCenter) < radFriend + radFoe) {
-		// 					CommandCenter.getInstance().getOpsQueue().enqueue(movFriend, GameOpAction.REMOVE);
-		// 					CommandCenter.getInstance().getOpsQueue().enqueue(movFoe, GameOpAction.REMOVE);
-		// 				}
-		// 			});
-		// 	});
-		// // Check for collisions between the falcon and floaters
-		// let pntFalconCenter: Point = CommandCenter.getInstance().getFalcon().getCenter();
-		// let radFalcon: number = CommandCenter.getInstance().getFalcon().getRadius();
-		// let pntFloaterCenter: Point;
-		// let radFloater: number;
-		// CommandCenter.getInstance()
-		// 	.getMovFloaters()
-		// 	.forEach((movFloater: Movable) => {
-		// 		pntFloaterCenter = movFloater.getCenter();
-		// 		radFloater = movFloater.getRadius();
-		// 		// Detect collision
-		// 		if (pntFalconCenter.distanceTo(pntFloaterCenter) < radFalcon + radFloater) {
-		// 			CommandCenter.getInstance().getOpsQueue().enqueue(movFloater, GameOpAction.REMOVE);
-		// 		}
-		// 	});
+		let pntFriendCenter: Point;
+		let pntFoeCenter: Point;
+		let radFriend: number;
+		let radFoe: number;
+
+		// Check for collisions between friends and foes
+		CommandCenter.getInstance()
+			.getMovFriends()
+			.forEach((movFriend: Movable) => {
+				CommandCenter.getInstance()
+					.getMovFoes()
+					.forEach((movFoe: Movable) => {
+						pntFriendCenter = movFriend.getCenter();
+						pntFoeCenter = movFoe.getCenter();
+						radFriend = movFriend.getRadius();
+						radFoe = movFoe.getRadius();
+						// Detect collision
+						if (pntFriendCenter.distanceTo(pntFoeCenter) < radFriend + radFoe) {
+							CommandCenter.getInstance().getOpsQueue().enqueue(movFriend, GameOpAction.REMOVE);
+							CommandCenter.getInstance().getOpsQueue().enqueue(movFoe, GameOpAction.REMOVE);
+						}
+					});
+			});
+
+		// Check for collisions between the falcon and floaters
+		let pntFalconCenter: Point = CommandCenter.getInstance().getFalcon().getCenter();
+		let radFalcon: number = CommandCenter.getInstance().getFalcon().getRadius();
+		let pntFloaterCenter: Point;
+		let radFloater: number;
+		CommandCenter.getInstance()
+			.getMovFloaters()
+			.forEach((movFloater: Movable) => {
+				pntFloaterCenter = movFloater.getCenter();
+				radFloater = movFloater.getRadius();
+				// Detect collision
+				if (pntFalconCenter.distanceTo(pntFloaterCenter) < radFalcon + radFloater) {
+					CommandCenter.getInstance().getOpsQueue().enqueue(movFloater, GameOpAction.REMOVE);
+				}
+			});
 	}
 
 	private processGameOpsQueue(): void {
@@ -152,14 +154,21 @@ export class Game {
 
 	spawnShieldFloater() {}
 	spawnNukeFloater() {}
-	spawnBigAsteroids(num: number) {}
+
+	spawnBigAsteroids(num: number) {
+		while (num-- > 0) {
+			CommandCenter.getInstance().getOpsQueue().enqueue(new Asteroid(0), GameOpAction.ADD);
+		}
+	}
 
 	private isLevelClear(): boolean {
-		let asteroidFree: boolean = false;
+		let asteroidFree: boolean = true;
 		CommandCenter.getInstance()
 			.getMovFoes()
 			.forEach((movFoe: Movable) => {
-				// TODO: Check if the foe is an asteroid when Asteroid is implemented
+				if (movFoe instanceof Asteroid) {
+					asteroidFree = false;
+				}
 			});
 		return asteroidFree;
 	}
@@ -230,7 +239,8 @@ export class Game {
 		}
 
 		switch (event.keyCode) {
-			case Game.KEYS.LEFT | Game.KEYS.RIGHT:
+			case Game.KEYS.LEFT:
+			case Game.KEYS.RIGHT:
 				falcon.setTurnState(FalconTurnState.IDLE);
 				break;
 			case Game.KEYS.UP:
@@ -241,9 +251,8 @@ export class Game {
 				CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
 				break;
 			case Game.KEYS.QUIT:
-				// TODO: Implement a proper quitting method
-				// At the moment, game pauses (we cannot close the browser)
-				CommandCenter.getInstance().setPaused(true);
+				// When quitting, the game is over since we cannot close the browser
+				CommandCenter.getInstance().setNumFalcons(0);
 				break;
 			case Game.KEYS.RADAR:
 				CommandCenter.getInstance().setRadar(!CommandCenter.getInstance().isRadar());

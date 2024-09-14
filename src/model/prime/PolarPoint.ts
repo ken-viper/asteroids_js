@@ -7,6 +7,17 @@ export class PolarPoint {
 		this.theta = theta;
 	}
 
+	public compareTheta(other: PolarPoint): number {
+		if (this.theta < other.theta) {
+			return -1;
+		}
+		if (this.theta > other.theta) {
+			return 1;
+		}
+
+		return 0;
+	}
+
 	public getR(): number {
 		return this.r;
 	}
