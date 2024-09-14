@@ -9,6 +9,8 @@ import { GameOp, GameOpAction } from "./GameOp";
 import { Bullet } from "../model/Bullet";
 import { Falcon, FalconTurnState } from "../model/Falcon";
 import { Asteroid } from "../model/Asteroid";
+import { ShieldFloater } from "../model/ShieldFloater";
+import { NukeFloater } from "../model/NukeFloater";
 
 export class Game {
 	public static readonly DIM: Dimension = new Dimension(1400, 680);
@@ -152,10 +154,23 @@ export class Game {
 		}
 	}
 
-	spawnShieldFloater() {}
-	spawnNukeFloater() {}
+	private spawnShieldFloater(): void {
+		if (CommandCenter.getInstance().getFrame() % ShieldFloater.SPAWN_SHIELD_FLOATER === 0) {
+			CommandCenter.getInstance()
+				.getOpsQueue()
+				.enqueue(new ShieldFloater(Game.FRAMES_PER_SECOND), GameOpAction.ADD);
+		}
+	}
 
-	spawnBigAsteroids(num: number) {
+	private spawnNukeFloater(): void {
+		if (CommandCenter.getInstance().getFrame() % NukeFloater.SPAWN_NUKE_FLOATER === 0) {
+			CommandCenter.getInstance()
+				.getOpsQueue()
+				.enqueue(new NukeFloater(Game.FRAMES_PER_SECOND), GameOpAction.ADD);
+		}
+	}
+
+	private spawnBigAsteroids(num: number): void {
 		while (num-- > 0) {
 			CommandCenter.getInstance().getOpsQueue().enqueue(new Asteroid(0), GameOpAction.ADD);
 		}

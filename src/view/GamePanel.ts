@@ -1,8 +1,10 @@
 import { CommandCenter } from "../controller/CommandCenter";
 import { Game } from "../controller/Game";
+import { Utils } from "../controller/Utils";
 import { Movable } from "../model/Movable";
 import { Dimension } from "../model/prime/Dimension";
 import { Point } from "../model/prime/Point";
+import { PolarPoint } from "../model/prime/PolarPoint";
 import { getEnumName, Universe } from "../model/prime/Universe";
 import { GameFrame } from "./GameFrame";
 
@@ -105,19 +107,24 @@ export class GamePanel {
 		);
 	}
 
-	private drawMeters(g: CanvasRenderingContext2D): void {}
+	private drawMeters(g: CanvasRenderingContext2D): void {
+		const shieldValue: number = CommandCenter.getInstance().getFalcon().getShield() / 2;
+		const nukeValue: number = CommandCenter.getInstance().getFalcon().getNukeMeter() / 6;
+
+		this.drawOneMeter(g, "cyan", 1, shieldValue);
+		this.drawOneMeter(g, "yellow", 2, nukeValue);
+	}
 
 	private drawOneMeter(g: CanvasRenderingContext2D, color: string, offset: number, percent: number): void {
 		const xVal: number = Game.DIM.getWidth() - (100 + 120 * offset);
 		const yVal: number = Game.DIM.getHeight() - 45;
 
-		// Draw meter
-		g.fillStyle = color;
-		g.fillRect(xVal, yVal, percent, 10);
-
-		// Draw gray box
+		// Order of drawing is important because they overlap. First, we draw the gray box and then the meter.
 		g.fillStyle = "gray";
 		g.fillRect(xVal, yVal, 100, 10);
+
+		g.fillStyle = color;
+		g.fillRect(xVal, yVal, percent, 10);
 	}
 
 	public update(): void {
@@ -176,7 +183,33 @@ export class GamePanel {
 		}
 	}
 
-	private drawOneShip(g: CanvasRenderingContext2D, offset: number): void {}
+	private drawOneShip(g: CanvasRenderingContext2D, offset: number): void {
+		g.fillStyle = "orange";
+
+		const SHIP_RADIUS = 15;
+		const X_POS = Game.DIM.getWidth() - 27 * offset;
+		const Y_POS = Game.DIM.getHeight() - 45;
+
+		const polars = Utils.cartesiansToPolars(this.pntShipsRemaining);
+
+		const rotatePolarBy90 = (pp: PolarPoint): PolarPoint => new PolarPoint(pp.getR(), pp.getTheta() + Math.PI / 2);
+
+		const polarToCartesian = (pp: PolarPoint): Point =>
+			new Point(
+				Math.round(pp.getR() * SHIP_RADIUS * Math.sin(pp.getTheta())),
+				Math.round(pp.getR() * SHIP_RADIUS * Math.cos(pp.getTheta()))
+			);
+
+		const adjustForLocation = (pnt: Point): Point => new Point(pnt.getX() + X_POS, pnt.getY() + Y_POS);
+
+		const points = polars.map(rotatePolarBy90).map(polarToCartesian).map(adjustForLocation);
+
+		g.beginPath();
+		g.moveTo(points[0].getX(), points[0].getY());
+		points.slice(1).forEach((point) => g.lineTo(point.getX(), point.getY()));
+		g.closePath();
+		g.fill();
+	}
 
 	private displayTextOnScreen(g: CanvasRenderingContext2D, ...lines: string[]): void {
 		const spacer = 20;

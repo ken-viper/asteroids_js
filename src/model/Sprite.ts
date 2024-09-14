@@ -99,7 +99,6 @@ export abstract class Sprite implements Movable {
 		g.restore();
 	}
 
-	// TODO: Fix the rendering issue of polygons
 	protected renderVector(g: CanvasRenderingContext2D): void {
 		if (this.color) {
 			g.strokeStyle = this.color;
