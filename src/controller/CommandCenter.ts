@@ -3,6 +3,7 @@ import { Movable } from "../model/Movable";
 import { Dimension } from "../model/prime/Dimension";
 import { LinkedList } from "../model/prime/LinkedList";
 import { Universe } from "../model/prime/Universe";
+import { Star } from "../model/Star";
 import { GameOpAction } from "./GameOp";
 import { GameOpsQueue } from "./GameOpsQueue";
 
@@ -69,7 +70,7 @@ export class CommandCenter {
 	private generateStarField(): void {
 		let count: number = 100;
 		while (count-- > 0) {
-			// TODO: Add a star to the opsQueue
+			this.opsQueue.enqueue(new Star(), GameOpAction.ADD);
 		}
 	}
 
