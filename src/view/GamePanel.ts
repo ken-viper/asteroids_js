@@ -204,13 +204,19 @@ export class GamePanel {
 
 		const adjustForLocation = (pnt: Point): Point => new Point(pnt.getX() + X_POS, pnt.getY() + Y_POS);
 
-		const points = polars.map(rotatePolarBy90).map(polarToCartesian).map(adjustForLocation);
+		const points = polars
+            .map(rotatePolarBy90)
+            .map(polarToCartesian)
+            .map(adjustForLocation);
 
 		g.beginPath();
 		g.moveTo(points[0].getX(), points[0].getY());
 		points.slice(1).forEach((point) => g.lineTo(point.getX(), point.getY()));
-		g.closePath();
-		g.fill();
+
+        g.strokeStyle = "orange";
+        g.lineWidth = 1;
+        g.stroke();
+        g.closePath();
 	}
 
 	private displayTextOnScreen(g: CanvasRenderingContext2D, ...lines: string[]): void {
