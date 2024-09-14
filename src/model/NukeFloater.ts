@@ -7,15 +7,13 @@ import { LinkedList } from "./prime/LinkedList";
 
 export class NukeFloater extends Floater {
 	// Spawn every 12 seconds
-	public static SPAWN_NUKE_FLOATER: number = 12;
+	public static SPAWN_NUKE_FLOATER: number = 175;
 
 	// FPS added in constructor (instead of static instantiation) to prevent accessing an undefined value
-	constructor(fps: number) {
+	constructor() {
 		super();
 		this.setColor("yellow");
 		this.setExpiry(120);
-
-		NukeFloater.SPAWN_NUKE_FLOATER *= fps;
 	}
 
 	public removeFromGame(list: LinkedList<Movable>): void {

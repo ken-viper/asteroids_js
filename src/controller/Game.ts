@@ -158,17 +158,13 @@ export class Game {
 
 	private spawnShieldFloater(): void {
 		if (CommandCenter.getInstance().getFrame() % ShieldFloater.SPAWN_SHIELD_FLOATER === 0) {
-			CommandCenter.getInstance()
-				.getOpsQueue()
-				.enqueue(new ShieldFloater(Game.FRAMES_PER_SECOND), GameOpAction.ADD);
+			CommandCenter.getInstance().getOpsQueue().enqueue(new ShieldFloater(), GameOpAction.ADD);
 		}
 	}
 
 	private spawnNukeFloater(): void {
-		if (CommandCenter.getInstance().getFrame() % NukeFloater.SPAWN_NUKE_FLOATER === 0) {
-			CommandCenter.getInstance()
-				.getOpsQueue()
-				.enqueue(new NukeFloater(Game.FRAMES_PER_SECOND), GameOpAction.ADD);
+		if (CommandCenter.getInstance().getFrame() % NukeFloater.SPAWN_NUKE_FLOATER == 0) {
+			CommandCenter.getInstance().getOpsQueue().enqueue(new NukeFloater(), GameOpAction.ADD);
 		}
 	}
 

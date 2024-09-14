@@ -7,14 +7,12 @@ import { LinkedList } from "./prime/LinkedList";
 
 export class ShieldFloater extends Floater {
 	// Spawn every 25 seconds
-	public static SPAWN_SHIELD_FLOATER: number = 25;
+	public static SPAWN_SHIELD_FLOATER: number = 350;
 
-	constructor(fps: number) {
+	constructor() {
 		super();
 		this.setColor("cyan");
 		this.setExpiry(260);
-
-		ShieldFloater.SPAWN_SHIELD_FLOATER *= fps;
 	}
 
 	public removeFromGame(list: LinkedList<Movable>): void {

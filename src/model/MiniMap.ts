@@ -28,7 +28,7 @@ export class MiniMap extends Sprite {
 	}
 
 	public draw(g: CanvasRenderingContext2D): void {
-		if (CommandCenter.getInstance().isRadar()) return;
+		if (!CommandCenter.getInstance().isRadar()) return;
 
 		this.aspectRatio = this.aspectAdjustedRatio(CommandCenter.getInstance().getUniDim());
 
@@ -92,6 +92,7 @@ export class MiniMap extends Sprite {
 				const translatedPoint: Point = this.translatePoint(mov.getCenter());
 				g.beginPath();
 				g.arc(translatedPoint.getX() - 2, translatedPoint.getY() - 2, 4, 0, 2 * Math.PI);
+				g.fill();
 			});
 
 		// Draw friends
