@@ -119,12 +119,14 @@ export class GamePanel {
 		const xVal: number = Game.DIM.getWidth() - (100 + 120 * offset);
 		const yVal: number = Game.DIM.getHeight() - 45;
 
-		// Order of drawing is important because they overlap. First, we draw the gray box and then the meter.
-		g.fillStyle = "gray";
-		g.fillRect(xVal, yVal, 100, 10);
-
 		g.fillStyle = color;
 		g.fillRect(xVal, yVal, percent, 10);
+
+        g.strokeStyle = "gray";
+        g.lineWidth = 1;
+        g.strokeRect(xVal, yVal, 100, 10);
+
+
 	}
 
 	public update(): void {
