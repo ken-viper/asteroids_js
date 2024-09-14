@@ -11,6 +11,7 @@ import { Falcon, FalconTurnState } from "../model/Falcon";
 import { Asteroid } from "../model/Asteroid";
 import { ShieldFloater } from "../model/ShieldFloater";
 import { NukeFloater } from "../model/NukeFloater";
+import { Nuke } from "../model/Nuke";
 
 export class Game {
 	public static readonly DIM: Dimension = new Dimension(1400, 680);
@@ -229,6 +230,7 @@ export class Game {
 				CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOpAction.ADD);
 				break;
 			case Game.KEYS.NUKE:
+				CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOpAction.ADD);
 				break;
 			case Game.KEYS.UP:
 				falcon.setThrusting(true);

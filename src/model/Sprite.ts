@@ -176,6 +176,10 @@ export abstract class Sprite implements Movable {
 		return this.spin;
 	}
 
+	getColor(): string {
+		return this.color;
+	}
+
 	getExpiry(): number {
 		return this.expiry;
 	}
