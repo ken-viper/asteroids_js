@@ -45,7 +45,6 @@ export class Falcon extends Sprite {
 		rasterMap.set(FalconImageState.FALCON_THR, ImageLoader.getImage("fal/falcon125_thr.png"));
 		rasterMap.set(FalconImageState.FALCON_SHIELD, ImageLoader.getImage("fal/falcon125_SHIELD.png"));
 		rasterMap.set(FalconImageState.FALCON_SHIELD_THR, ImageLoader.getImage("fal/falcon125_SHIELD_thr.png"));
-
 		this.setRasterMap(rasterMap);
 	}
 

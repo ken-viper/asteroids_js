@@ -5,6 +5,7 @@ import { LinkedList } from "./prime/LinkedList";
 import { Point } from "./prime/Point";
 import { PolarPoint } from "./prime/PolarPoint";
 import { Sprite } from "./Sprite";
+import { WhiteCloudDebris } from "./WhiteCloudDebris";
 
 export class Asteroid extends Sprite {
 	private readonly LARGE_RADIUS = 110;
@@ -108,7 +109,7 @@ export class Asteroid extends Sprite {
 		let size: number = this.getSize();
 
 		if (size > 1) {
-			// TODO: Add debris (WhiteCloudDebris when implemented)
+			CommandCenter.getInstance().getOpsQueue().enqueue(new WhiteCloudDebris(this), GameOpAction.ADD);
 		} else {
 			size += 2;
 			while (size-- > 0) {

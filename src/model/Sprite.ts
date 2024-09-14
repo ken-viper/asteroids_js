@@ -173,6 +173,14 @@ export abstract class Sprite implements Movable {
 		return this.team;
 	}
 
+	getSpin(): number {
+		return this.spin;
+	}
+
+	getExpiry(): number {
+		return this.expiry;
+	}
+
 	setCenter(center: Point): void {
 		this.center = center;
 	}
