@@ -1,4 +1,5 @@
 import { Falcon } from "../model/Falcon";
+import { MiniMap } from "../model/MiniMap";
 import { Movable } from "../model/Movable";
 import { Dimension } from "../model/prime/Dimension";
 import { LinkedList } from "../model/prime/LinkedList";
@@ -19,8 +20,7 @@ export class CommandCenter {
 
 	private readonly falcon: Falcon = new Falcon();
 	private readonly miniDimHash: Map<Universe, Dimension> = new Map<Universe, Dimension>();
-	// TODO: Add concrete implementation
-	private readonly miniMap: any;
+	private readonly miniMap: MiniMap = new MiniMap();
 
 	private readonly movDebris: LinkedList<Movable> = new LinkedList<Movable>();
 	private readonly movFriends: LinkedList<Movable> = new LinkedList<Movable>();
@@ -54,8 +54,7 @@ export class CommandCenter {
 		this.falcon.decrementFalconNumAndSpawn();
 
 		this.opsQueue.enqueue(this.falcon, GameOpAction.ADD);
-		// TODO: Uncomment this after implementing the radar
-		// this.opsQueue.enqueue(this.miniMap, GameOpAction.ADD);
+		this.opsQueue.enqueue(this.miniMap, GameOpAction.ADD);
 	}
 
 	private setDimHash(): void {
