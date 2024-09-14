@@ -26,7 +26,7 @@ export class WhiteCloudDebris extends Sprite {
 		this.setExpiry(rasterMap.size * WhiteCloudDebris.SLOW_MO);
 
 		this.setSpin(explodingSprite.getSpin());
-		this.setCenter(new Point(explodingSprite.getCenter().getX(), explodingSprite.getCenter().getY()));
+		this.setCenter(explodingSprite.getCenter().clone());
 		this.setDeltaX(explodingSprite.getDeltaX());
 		this.setDeltaY(explodingSprite.getDeltaY());
 		this.setRadius(Math.floor(explodingSprite.getRadius() * 1.32));

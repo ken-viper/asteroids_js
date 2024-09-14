@@ -11,6 +11,10 @@ export class Point {
 		return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
 	}
 
+    public  clone(): Point {
+        return new Point(this.x, this.y)
+    }
+
 	public getX(): number {
 		return this.x;
 	}

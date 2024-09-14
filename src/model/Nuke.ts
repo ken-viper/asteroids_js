@@ -12,18 +12,20 @@ export class Nuke extends Sprite {
 
 	constructor(falcon: Falcon) {
 		super();
-		this.setCenter(new Point(falcon.getCenter().getX(), falcon.getCenter().getY()));
+		this.setCenter(falcon.getCenter().clone());
 		this.setColor("yellow");
 		this.setExpiry(Nuke.EXPIRE);
 		this.setRadius(0);
 		this.setTeam(Team.FRIEND);
+        this.setOrientation(falcon.getOrientation());
 
 		const FIRE_POWER: number = 11;
+
 		const vectorX: number = Math.cos((Math.PI / 180) * this.getOrientation()) * FIRE_POWER;
 		const vectorY: number = Math.sin((Math.PI / 180) * this.getOrientation()) * FIRE_POWER;
+        this.setDeltaX(falcon.getDeltaX() + vectorX);
+        this.setDeltaY(falcon.getDeltaY() + vectorY);
 
-		this.setDeltaX(falcon.getDeltaX() + vectorX);
-		this.setDeltaY(falcon.getDeltaY() + vectorY);
 	}
 
 	public draw(g: CanvasRenderingContext2D): void {

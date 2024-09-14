@@ -12,7 +12,7 @@ export class Bullet extends Sprite {
 		this.setColor("orange");
 		this.setExpiry(20);
 		this.setRadius(6);
-		this.setCenter(new Point(falcon.getCenter().getX(), falcon.getCenter().getY()));
+		this.setCenter(falcon.getCenter().clone());
 		this.setOrientation(falcon.getOrientation());
 
 		const FIRE_POWER: number = 35;
