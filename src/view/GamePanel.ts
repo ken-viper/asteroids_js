@@ -7,6 +7,7 @@ import { Point } from "../model/prime/Point";
 import { PolarPoint } from "../model/prime/PolarPoint";
 import { getEnumName, Universe } from "../model/prime/Universe";
 import { GameFrame } from "./GameFrame";
+import {LinkedList} from "../model/prime/LinkedList";
 
 export class GamePanel {
 	private readonly gameFrame: GameFrame;
@@ -153,12 +154,12 @@ export class GamePanel {
 		} else if (CommandCenter.getInstance().isPaused()) {
 			this.displayTextOnScreen(this.offscreenContext, "GAME PAUSED", "press 'P' to continue");
 		} else {
-			this.moveDrawMovables(
+            this.moveDrawMovables(
 				this.offscreenContext,
-				CommandCenter.getInstance().getMovDebris().toArray(),
-				CommandCenter.getInstance().getMovFloaters().toArray(),
-				CommandCenter.getInstance().getMovFoes().toArray(),
-				CommandCenter.getInstance().getMovFriends().toArray()
+				CommandCenter.getInstance().getMovDebris(),
+				CommandCenter.getInstance().getMovFloaters(),
+				CommandCenter.getInstance().getMovFoes(),
+				CommandCenter.getInstance().getMovFriends()
 			);
 			this.drawNumberShipsRemaining(this.offscreenContext);
 			this.drawMeters(this.offscreenContext);
@@ -169,9 +170,9 @@ export class GamePanel {
 		this.context.drawImage(this.offscreenCanvas, 0, 0);
 	}
 
-	private moveDrawMovables(g: CanvasRenderingContext2D, ...teams: Movable[][]): void {
+	private moveDrawMovables(g: CanvasRenderingContext2D, ...teams: LinkedList<Movable>[]): void {
 		teams.forEach((team) => {
-			team.forEach((movable) => {
+            team.forEach((movable) => {
 				movable.move();
 				movable.draw(g);
 			});
@@ -216,7 +217,6 @@ export class GamePanel {
             .map(polarToCartesian)
             .map(adjustForLocation)
             .map((p) => p.getY());
-
 
         Utils.drawPolygon(g, xPoints, yPoints);
 	}
