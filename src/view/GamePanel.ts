@@ -186,7 +186,7 @@ export class GamePanel {
 	}
 
 	private drawOneShip(g: CanvasRenderingContext2D, offset: number): void {
-		g.fillStyle = "orange";
+		g.strokeStyle = "orange";
 
 		const SHIP_RADIUS = 15;
 		const X_POS = Game.DIM.getWidth() - 27 * offset;
@@ -204,19 +204,21 @@ export class GamePanel {
 
 		const adjustForLocation = (pnt: Point): Point => new Point(pnt.getX() + X_POS, pnt.getY() + Y_POS);
 
-		const points = polars
+
+        const xPoints = polars
             .map(rotatePolarBy90)
             .map(polarToCartesian)
-            .map(adjustForLocation);
+            .map(adjustForLocation)
+            .map((p) => p.getX());
 
-		g.beginPath();
-		g.moveTo(points[0].getX(), points[0].getY());
-		points.slice(1).forEach((point) => g.lineTo(point.getX(), point.getY()));
+        const yPoints = polars
+            .map(rotatePolarBy90)
+            .map(polarToCartesian)
+            .map(adjustForLocation)
+            .map((p) => p.getY());
 
-        g.strokeStyle = "orange";
-        g.lineWidth = 1;
-        g.stroke();
-        g.closePath();
+
+        Utils.drawPolygon(g, xPoints, yPoints);
 	}
 
 	private displayTextOnScreen(g: CanvasRenderingContext2D, ...lines: string[]): void {

@@ -130,17 +130,12 @@ export abstract class Sprite implements Movable {
 			.map(adjustForLocation)
 			.map((p) => p.getY());
 
-		g.beginPath();
-		g.moveTo(xPoints[0], yPoints[0]);
-		for (let i = 0; i < xPoints.length; i++) {
-			g.lineTo(xPoints[i], yPoints[i]);
-		}
-		g.lineTo(xPoints[0], yPoints[0]);
-		g.closePath();
-		g.stroke();
-	}
+        Utils.drawPolygon(g, xPoints, yPoints);
+    }
 
-	public addToGame(list: LinkedList<Movable>): void {
+
+
+    public addToGame(list: LinkedList<Movable>): void {
 		list.add(this);
 	}
 

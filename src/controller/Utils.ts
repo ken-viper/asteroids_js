@@ -13,4 +13,15 @@ export class Utils {
 
 		return pntCartesians.map((pnt) => cartToPolarTransform(pnt, LARGEST_HYP));
 	}
+
+    public static drawPolygon(g: CanvasRenderingContext2D, xPoints: number[], yPoints: number[]) {
+        g.beginPath();
+        g.moveTo(xPoints[0], yPoints[0]);
+        for (let i = 0; i < xPoints.length; i++) {
+            g.lineTo(xPoints[i], yPoints[i]);
+        }
+        g.lineTo(xPoints[0], yPoints[0]);
+        g.closePath();
+        g.stroke();
+    }
 }
